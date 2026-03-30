@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página interativa com JavaScript - DOM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    input, select {
+      padding: 10px;
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    #contador {
+      font-weight: bold;
+      font-size: 20px;
+      color: #222;
+    }
+
+    #areaParagrafos p, #areaListas ul, #areaListas ol {
+      background: #eef;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    .info {
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1> DOM</h1>
+
+  <div class="box">
+    <h2>1. Contador de cliques</h2>
+    <button id="btnIncrementar">Incrementar</button>
+    <button id="btnDecrementar">Decrementar</button>
+    <p>Valor do contador: <span id="contador">0</span></p>
+  </div>
+
+  <div class="box">
+    <h2>2. Adicionar texto dinâmico</h2>
+    <input type="text" id="campoTexto" placeholder="Digite uma mensagem e pressione Enter">
+    <p class="info">Caracteres sem espaço: <span id="contadorCaracteres">0</span></p>
+    <div id="areaParagrafos"></div>
+  </div>
+
+  <div class="box">
+    <h2>3. Adicionar novo item</h2>
+    <select id="tipoLista">
+      <option value="ul">Lista não ordenada</option>
+      <option value="ol">Lista ordenada</option>
+    </select>
+    <button id="btnAdicionarLista">Adicionar lista</button>
+    <div id="areaListas"></div>
+  </div>
+
+  <div class="box">
+    <h2>4. Reset</h2>
+    <button id="btnReset">Resetar tudo</button>
+  </div>
+
+  <script>
+    // Buscar elementos da árvore DOM
+    const btnIncrementar = document.getElementById("btnIncrementar");
+    const btnDecrementar = document.getElementById("btnDecrementar");
+    const contadorSpan = document.getElementById("contador");
+
+    const campoTexto = document.getElementById("campoTexto");
+    const contadorCaracteres = document.getElementById("contadorCaracteres");
+    const areaParagrafos = document.getElementById("areaParagrafos");
+
+    const tipoLista = document.getElementById("tipoLista");
+    const btnAdicionarLista = document.getElementById("btnAdicionarLista");
+    const areaListas = document.getElementById("areaListas");
+
+    const btnReset = document.getElementById("btnReset");
+
+    // Variável do contador
+    let contador = 0;
+    let numeroLista = 1;
+
+    // Atualizar contador na tela
+    function atualizarContador() {
+      contadorSpan.textContent = contador;
+    }
+
+    // Evento de incrementar
+    btnIncrementar.addEventListener("click", function() {
+      contador++;
+      atualizarContador();
+    });
+
+    // Evento de decrementar
+    btnDecrementar.addEventListener("click", function() {
+      if (contador > 0) {
+        contador--;
+        atualizarContador();
+      } else {
+        alert("O contador já está em zero!");
+      }
+    });
+
+    // Contador de caracteres em tempo real sem espaços
+    campoTexto.addEventListener("input", function() {
+      const textoSemEspacos = campoTexto.value.replace(/\s/g, "");
+      contadorCaracteres.textContent = textoSemEspacos.length;
+    });
+
+    // Adicionar parágrafo ao pressionar Enter
+    campoTexto.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        const texto = campoTexto.value.trim();
+
+        if (texto !== "") {
+          const novoParagrafo = document.createElement("p");
+          novoParagrafo.textContent = texto;
+          areaParagrafos.appendChild(novoParagrafo);
+
+          campoTexto.value = "";
+          contadorCaracteres.textContent = 0;
+        }
+      }
+    });
+
+    // Adicionar nova lista
+    btnAdicionarLista.addEventListener("click", function() {
+      const tipo = tipoLista.value;
+      const novaLista = document.createElement(tipo);
+
+      const item1 = document.createElement("li");
+      const item2 = document.createElement("li");
+      const item3 = document.createElement("li");
+
+      item1.textContent = "Item 1 da lista " + numeroLista;
+      item2.textContent = "Item 2 da lista " + numeroLista;
+      item3.textContent = "Item 3 da lista " + numeroLista;
+
+      novaLista.appendChild(item1);
+      novaLista.appendChild(item2);
+      novaLista.appendChild(item3);
+
+      areaListas.appendChild(novaLista);
+      numeroLista++;
+    });
+
+    // Resetar tudo
+    btnReset.addEventListener("click", function() {
+      contador = 0;
+      atualizarContador();
+
+      campoTexto.value = "";
+      contadorCaracteres.textContent = 0;
+
+      areaParagrafos.innerHTML = "";
+      areaListas.innerHTML = "";
+
+      numeroLista = 1;
+    });
+  </script>
+
+</body>
+</html>
